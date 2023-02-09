@@ -1,45 +1,47 @@
-import React, { Component } from "react";
+import React, { Component, useEffect, useState } from "react";
 import Counters from "./components/Counters";
 import NavBar from "./components/NavBar";
 
-export default class App extends Component {
-  state = {
-    counters: [
-      {
-        id: 1,
-        value: 3,
-      },
-      {
-        id: 2,
-        value: 5,
-      },
-      {
-        id: 3,
-        value: 7,
-      },
-    ],
+const App = () => {
+  const [counters, setCounters] = useState([
+    {
+      id: 1,
+      value: 3,
+    },
+    {
+      id: 2,
+      value: 5,
+    },
+    {
+      id: 3,
+      value: 7,
+    },
+  ]);
+
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    console.log("counters change");
+  }, [counters]);
+
+  const handleDelete = (id) => {
+    setCounters(counters.filter((counter) => counter.id !== id));
   };
 
-  handleDelete = (id) => {
-    this.setState({
-      counters: this.state.counters.filter((counter) => counter.id !== id),
-    });
-  };
-
-  handleReset = () => {
-    this.setState({
-      counters: this.state.counters.map((counter) => {
+  const handleReset = () => {
+    setCounters(
+      counters.map((counter) => {
         return {
           ...counter,
           value: 0,
         };
-      }),
-    });
+      })
+    );
   };
 
-  handleIncrement = (id) => {
-    this.setState({
-      counters: this.state.counters.map((counter) => {
+  const handleIncrement = (id) => {
+    setCounters(
+      counters.map((counter) => {
         if (counter.id === id) {
           return {
             ...counter,
@@ -47,13 +49,13 @@ export default class App extends Component {
           };
         }
         return counter;
-      }),
-    });
+      })
+    );
   };
 
-  handleDecrement = (id) => {
-    this.setState({
-      counters: this.state.counters.map((counter) => {
+  const handleDecrement = (id) => {
+    setCounters(
+      counters.map((counter) => {
         if (counter.id === id) {
           return {
             ...counter,
@@ -61,33 +63,34 @@ export default class App extends Component {
           };
         }
         return counter;
-      }),
-    });
-  };
-
-  getCountersWithValue = () => {
-    return this.state.counters.filter((counter) => counter.value > 0).length;
-  };
-
-  componentDidMount() {
-    // api calls
-    console.log("didmount");
-  }
-
-  render() {
-    return (
-      <div>
-        <NavBar totalCount={this.getCountersWithValue()} />
-        <div className="container">
-          <Counters
-            counters={this.state.counters}
-            onDelete={this.handleDelete}
-            onIncrement={this.handleIncrement}
-            onDecrement={this.handleDecrement}
-            onReset={this.handleReset}
-          />
-        </div>
-      </div>
+      })
     );
-  }
-}
+  };
+
+  const getCountersWithValue = () => {
+    return counters.filter((counter) => counter.value > 0).length;
+  };
+
+  return (
+    <div>
+      <NavBar totalCount={getCountersWithValue()} />
+      <button
+        onClick={() => setErrorMessage("new error")}
+        className="btn btn-warning"
+      >
+        Add error
+      </button>
+      <div className="container">
+        <Counters
+          counters={counters}
+          onDelete={handleDelete}
+          onIncrement={handleIncrement}
+          onDecrement={handleDecrement}
+          onReset={handleReset}
+        />
+      </div>
+    </div>
+  );
+};
+
+export default App;
