@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
 import { products_data } from "./products";
-import ProductsPage from "./components/ProductsPage";
+import NavBar from "./components/NavBar";
+import Counters from "./components/Counters";
 
 function App() {
   const [counters, setCounters] = useState(products_data);
@@ -11,27 +11,14 @@ function App() {
     setCounters(counters.filter((counter) => counter.id !== id));
   };
 
-  const handleReset = () => {
-    setCounters(
-      counters.map((counter) => {
-        return {
-          ...counter,
-          value: 0,
-        };
-      })
-    );
-    setCart([]);
-  };
-
   const handleIncrement = (id) => {
     handleAddCart(id);
     setCounters(
       counters.map((counter) => {
-        if (counter.id === id && counter.stock > 0) {
+        if (counter.id === id) {
           return {
             ...counter,
             value: counter.value + 1,
-            stock: counter.stock - 1,
           };
         }
         return counter;
@@ -42,14 +29,13 @@ function App() {
   const handleDecrement = (id) => {
     setCounters(
       counters.map((counter) => {
-        if (counter.id === id && counter.value > 0) {
+        if (counter.id === id) {
           if (counter.value === 1) {
             handleRemoveCart(counter.id);
           }
           return {
             ...counter,
             value: counter.value - 1,
-            stock: counter.stock + 1,
           };
         }
         return counter;
@@ -72,24 +58,23 @@ function App() {
     setCart(cart.filter((item) => item.id !== id));
   };
 
+  const getCountersWithValue = () => {
+    return counters.filter((counter) => counter.value > 0).length;
+  };
+
   return (
     <>
-      <Routes>
-        <Route path="/" element={<Navigate to="/products" />} />
-        <Route
-          path="/products"
-          element={
-            <ProductsPage
-              counters={counters}
-              cart={cart}
-              onReset={handleReset}
-              onDelete={handleDelete}
-              onIncrement={handleIncrement}
-              onDecrement={handleDecrement}
-            />
-          }
-        />
-      </Routes>
+      <div className="bg-light">
+        <NavBar totalCount={getCountersWithValue()} />
+        <div className="container-fluid">
+          <Counters
+            counters={counters}
+            onDelete={handleDelete}
+            onIncrement={handleIncrement}
+            onDecrement={handleDecrement}
+          />
+        </div>
+      </div>
     </>
   );
 }

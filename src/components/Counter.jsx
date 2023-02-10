@@ -22,14 +22,13 @@ const Counter = ({ counter, onIncrement, onDecrement }) => {
             width: "100%",
             maxHeight: 200,
           }}
-          src={counter.src}
+          src={counter.image}
           alt={counter.name}
         />
         <div className="card-body">
           <h5 className="card-title">{counter.name}</h5>
           <p className="card-text">₱ {counter.price}</p>
 
-          <p className="card-text">in stock: {counter.stock}</p>
           <div className="btn-group" role="group" hidden={counter.value <= 0}>
             <button
               onClick={() => onDecrement(counter.id)}
