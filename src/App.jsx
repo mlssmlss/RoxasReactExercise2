@@ -1,8 +1,10 @@
 import React, { Component, useEffect, useState } from "react";
 import Counters from "./components/Counters";
 import NavBar from "./components/NavBar";
+import { Shop } from "./components/shop";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-const App = () => {
+const App = (props) => {
   const [counters, setCounters] = useState([
     {
       id: 1,
@@ -74,20 +76,15 @@ const App = () => {
   return (
     <div>
       <NavBar totalCount={getCountersWithValue()} />
-      <button
-        onClick={() => setErrorMessage("new error")}
-        className="btn btn-warning"
-      >
-        Add error
-      </button>
+
       <div className="container">
-        <Counters
+        {/* <Counters
           counters={counters}
           onDelete={handleDelete}
           onIncrement={handleIncrement}
           onDecrement={handleDecrement}
           onReset={handleReset}
-        />
+        /> */}
       </div>
     </div>
   );
