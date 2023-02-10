@@ -1,30 +1,11 @@
-import React, { Component, useEffect, useState } from "react";
-import Counters from "./components/Counters";
-import NavBar from "./components/NavBar";
-import { Shop } from "./components/shop";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React, { useState } from "react";
+import { Navigate, Route, Routes } from "react-router-dom";
+import { products_data } from "./products";
+import ProductsPage from "./components/ProductsPage";
 
-const App = (props) => {
-  const [counters, setCounters] = useState([
-    {
-      id: 1,
-      value: 3,
-    },
-    {
-      id: 2,
-      value: 5,
-    },
-    {
-      id: 3,
-      value: 7,
-    },
-  ]);
-
-  const [errorMessage, setErrorMessage] = useState("");
-
-  useEffect(() => {
-    console.log("counters change");
-  }, [counters]);
+function App() {
+  const [counters, setCounters] = useState(products_data);
+  const [cart, setCart] = useState([]);
 
   const handleDelete = (id) => {
     setCounters(counters.filter((counter) => counter.id !== id));
@@ -39,15 +20,18 @@ const App = (props) => {
         };
       })
     );
+    setCart([]);
   };
 
   const handleIncrement = (id) => {
+    handleAddCart(id);
     setCounters(
       counters.map((counter) => {
-        if (counter.id === id) {
+        if (counter.id === id && counter.stock > 0) {
           return {
             ...counter,
             value: counter.value + 1,
+            stock: counter.stock - 1,
           };
         }
         return counter;
@@ -58,10 +42,14 @@ const App = (props) => {
   const handleDecrement = (id) => {
     setCounters(
       counters.map((counter) => {
-        if (counter.id === id) {
+        if (counter.id === id && counter.value > 0) {
+          if (counter.value === 1) {
+            handleRemoveCart(counter.id);
+          }
           return {
             ...counter,
             value: counter.value - 1,
+            stock: counter.stock + 1,
           };
         }
         return counter;
@@ -69,25 +57,41 @@ const App = (props) => {
     );
   };
 
-  const getCountersWithValue = () => {
-    return counters.filter((counter) => counter.value > 0).length;
+  const handleAddCart = (id) => {
+    if (cart.find((item) => item.id === id)) {
+    } else {
+      let newCartItem = {
+        id: id,
+      };
+
+      setCart([...cart, newCartItem]);
+    }
+  };
+
+  const handleRemoveCart = (id) => {
+    setCart(cart.filter((item) => item.id !== id));
   };
 
   return (
-    <div>
-      <NavBar totalCount={getCountersWithValue()} />
-
-      <div className="container">
-        {/* <Counters
-          counters={counters}
-          onDelete={handleDelete}
-          onIncrement={handleIncrement}
-          onDecrement={handleDecrement}
-          onReset={handleReset}
-        /> */}
-      </div>
-    </div>
+    <>
+      <Routes>
+        <Route path="/" element={<Navigate to="/products" />} />
+        <Route
+          path="/products"
+          element={
+            <ProductsPage
+              counters={counters}
+              cart={cart}
+              onReset={handleReset}
+              onDelete={handleDelete}
+              onIncrement={handleIncrement}
+              onDecrement={handleDecrement}
+            />
+          }
+        />
+      </Routes>
+    </>
   );
-};
+}
 
 export default App;

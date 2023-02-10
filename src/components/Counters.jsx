@@ -1,27 +1,23 @@
 import React from "react";
 import Counter from "./Counter";
-
-const Counters = ({
-  onIncrement,
-  onDecrement,
-  onDelete,
-  counters,
-  onReset,
-}) => {
+const Counters = ({ onIncrement, onDecrement, onDelete, counters }) => {
   return (
     <div>
-      <button onClick={onReset} className="btn btn-primary ms-4 mt-2">
-        Reset
-      </button>
-      {counters.map((counter) => (
-        <Counter
-          onDelete={onDelete}
-          counter={counter}
-          key={counter.id}
-          onIncrement={onIncrement}
-          onDecrement={onDecrement}
-        />
-      ))}
+      <div className="container">
+        <div className="row">
+          {counters.map((counter) => (
+            <div className="col-xs-12 col-md-6 col-xl-3">
+              <Counter
+                key={counter.id}
+                onDelete={onDelete}
+                counter={counter}
+                onIncrement={onIncrement}
+                onDecrement={onDecrement}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
