@@ -1,16 +1,16 @@
 import React from "react";
 import Counter from "./Counter";
-const Counters = ({ onIncrement, onDecrement, onDelete, counters }) => {
+const Counters = ({ onIncrement, onDecrement, onDelete, products }) => {
   return (
     <div>
       <div className="container">
         <div className="row">
-          {counters.map((counter) => (
+          {products.map((product) => (
             <div className="col-xs-12 col-md-6 col-xl-3">
               <Counter
-                key={counter.id}
+                key={product.id}
                 onDelete={onDelete}
-                counter={counter}
+                product={product}
                 onIncrement={onIncrement}
                 onDecrement={onDecrement}
               />

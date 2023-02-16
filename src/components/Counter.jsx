@@ -1,64 +1,94 @@
 import React from "react";
+import { Button, ButtonGroup, Card, Dropdown } from "react-bootstrap";
+import CardHeader from "react-bootstrap/esm/CardHeader";
+import { Link, useNavigate } from "react-router-dom";
 
-const Counter = ({ counter, onIncrement, onDecrement }) => {
+const Counter = ({ product, onIncrement, onDecrement, onDelete }) => {
   const formatText = () => {
-    if (counter.value > 0) {
-      return counter.value;
+    if (product.value > 0) {
+      return product.value;
     }
     return "Zero";
   };
 
+  const navigate = useNavigate();
   return (
     <>
-      <div
-        className="card mb-3 p-2"
+      <Card
+        className="mb-3 p-2"
         style={{ boxShadow: "rgba(0, 0, 0, 0.1) 0px 1px 4px" }}
       >
-        <img
-          className="card-img-top img-fluid border"
-          style={{
-            objectFit: "contain",
-            objectPosition: "center",
-            width: "100%",
-            maxHeight: 200,
-          }}
-          src={counter.image}
-          alt={counter.name}
-        />
-        <div className="card-body">
-          <h5 className="card-title">{counter.name}</h5>
-          <p className="card-text">₱ {counter.price}</p>
-
-          <div className="btn-group" role="group" hidden={counter.value <= 0}>
-            <button
-              onClick={() => onDecrement(counter.id)}
-              className="btn btn-secondary "
-              disabled={counter.value === 0}
+        <CardHeader className="bg-white p-1">
+          <Dropdown className="float-end">
+            <Dropdown.Toggle
+              variant="white"
+              id="product-actions"
+            ></Dropdown.Toggle>
+            <Dropdown.Menu>
+              <Dropdown.Item
+                onClick={() => {
+                  navigate(`/products/${product.id}/edit`);
+                }}
+              >
+                Edit Product
+              </Dropdown.Item>
+              <Dropdown.Item
+                onClick={() => {
+                  onDelete(product.id);
+                }}
+              >
+                Delete Product
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </CardHeader>
+        <Card.Body>
+          <Card.Img
+            variant="top"
+            className=" img-fluid border"
+            style={{
+              objectFit: "contain",
+              objectPosition: "center",
+              width: "100%",
+              maxHeight: 200,
+            }}
+            src={product.image}
+            alt={product.title}
+          ></Card.Img>
+          <Card.Title>{product.title}</Card.Title>
+          <Card.Text>₱{product.price}</Card.Text>
+          <ButtonGroup role="group" hidden={product.value <= 0}>
+            <Button
+              variant="secondary"
+              onClick={() => onDecrement(product.id)}
+              disabled={product.value === 0}
             >
               -
-            </button>
+            </Button>
             <span
               className="btn btn-outline-secondary"
               style={{ pointerEvents: "none" }}
             >
               {formatText()}
             </span>
-            <button
-              onClick={() => onIncrement(counter.id)}
-              className="btn btn-secondary"
+            <Button
+              variant="secondary"
+              onClick={() => onIncrement(product.id)}
+              disabled={product.value === 0}
             >
               +
-            </button>
-          </div>
-          <button
-            onClick={() => onIncrement(counter.id)}
-            className="btn btn-primary mr-1"
-            hidden={counter.value > 0}
+            </Button>
+          </ButtonGroup>
+          <Button
+            variant="primary"
+            onClick={() => onIncrement(product.id)}
+            className="mr-1"
+            hidden={product.value > 0}
           >
             Add To Cart
-          </button>
-        </div>
-      </div>
+          </Button>
+        </Card.Body>
+      </Card>
     </>
   );
 };

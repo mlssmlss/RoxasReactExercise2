@@ -1,21 +1,29 @@
 import React from "react";
-
-const NavBar = (props) => {
+import { Button, Container, Navbar } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import Cart from "./Cart";
+const NavBar = ({ onReset, totalCount, products, cart }) => {
+  const navigate = useNavigate();
   return (
-    <nav className="navbar bg-body-tertiary">
-      <div className="container-fluid">
-        <span className="navbar-brand mb-0 h1">
-          Cart
-          <span>
-            {props.totalCount > 0 && (
-              <span className="badge bg-secondary ms-2">
-                {props.totalCount}
-              </span>
-            )}
-          </span>
-        </span>
-      </div>
-    </nav>
+    <>
+      <Navbar variant="bg-body-tertiary">
+        <Container>
+          <Cart totalCount={totalCount} products={products} cart={cart}></Cart>
+          <Button
+            variant="light"
+            className="btn-outline-secondary"
+            onClick={() => {
+              navigate("/products/add");
+            }}
+          >
+            <span>
+              <a>Add Product</a>
+              <i className="bi bi-plus-circle p-1" />
+            </span>
+          </Button>
+        </Container>
+      </Navbar>
+    </>
   );
 };
 
